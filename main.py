@@ -22,21 +22,21 @@ def horner(wielomian, x):
 # Wybór funkcji: 'i' oznacza wybraną funkcję, 'x' wartość argumentu
 # można inne zrobić if u care
 def getValue(i, x):
-    wn = [1.5, -2.5, 3.3, 4.1]  # na sztywno wpisane, by użyć w hornerze
+    wn = [0.1, -2.0, 1.0, 13.0]  # na sztywno wpisane, by użyć w hornerze
     if i == 1:  # 1.5x^3 - 2.5x^2 + 3.3x + 4.1
         return horner(wn, x)
     elif i == 2:  # 2sin(x) + 3
-        return 2 * m.sin(x) + 3
+        return 3 * m.sin(x)
     elif i == 3:  # 1.4^x + 0.5
-        return (1.4) ** x + 0.5
+        return (3) ** x - 2
     elif i == 4:  # złożenie nr 1: x * cos(1.5^x+1)
-        return x * m.cos((1.5) ** x + 1)
+        return m.sin(horner(wn, x))
     elif i == 5:  # złożenie nr 2: 8^(x-1) * sin(cos(tan(x)))
-        return 8 ** (x - 1) * m.sin(m.cos(m.tan(x)))
+        return 2 ** (horner(wn, x)) - 13
     elif i == 6:
-        return x - 1
-    else:  # zrobiłem tak że gdy użytkownik zjebie to bierze wielomian spod 1
-        return horner(wn, x);
+        return 1.3 ** (13 * m.cos(x)) - 1
+        # else:  # zrobiłem tak że gdy użytkownik zjebie to bierze wielomian spod 1
+        # return horner(wn, x);
 
 
 # Jak będzie sprawdzany znak?
@@ -58,7 +58,7 @@ def bisection(i, start, end, stoperan, iteracjopsilon):
     if (startValue * endValue > 0):
         print("Choosen section is incorrect.")
         s.exit()
-
+    iterations = 0
     while True:
         m = float((start + end) / 2)  # wyznaczam środek przedziału
         tempValue = float(getValue(i, m))  # wpisuje do zmiennej by wielokrotnie tego nie wyliczac
@@ -67,14 +67,14 @@ def bisection(i, start, end, stoperan, iteracjopsilon):
         if (stoperan == 1):  # jeżeli stoperan jest na 1 to sprawdza dokładność
             if (abs(tempValue) < iteracjopsilon):  # abs, bo moduł funkcji w wymaganiach
                 return m
-        if (tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, to zmniejszamy go do rozmiaru prawej części
+        if (
+                tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, to zmniejszamy go do rozmiaru prawej części
             start = m
         else:
             end = m  # przedział zmniejszamy do lewej części
 
         if (stoperan == 2):  # jeżeli stoperan jest na 2 to sprawdza liczbę iteracji
-            iterations = 1
-            iterations = iterations
+            iterations = iterations + 1
             if (iteracjopsilon == iterations):
                 return m
 
@@ -90,23 +90,24 @@ def falsi(i, start, end, stoperan, iteracjopsilon):
     if (startValue * endValue > 0):
         print("Chosen section is incorrect.")
         s.exit()
-
+    iterations = 0  # pierwsza iteracja to jeszcze niezmniejszony przedział chyba
     while True:
-        x1 = float((startValue * end - endValue * start) / (startValue - endValue))  # wyznaczam punkt przecięcia cięciwy z OX
+        x1 = float(
+            (startValue * end - endValue * start) / (startValue - endValue))  # wyznaczam punkt przecięcia cięciwy z OX
         tempValue = float(getValue(i, x1))  # wpisuje do zmiennej by wielokrotnie tego nie wyliczac
         if (tempValue == 0):  # przypadek gdy 'x1' to miejsce zerowe
             return x1
         if (stoperan == 1):  # jeżeli stoperan jest na 1 to sprawdza dokładność
             if (abs(tempValue) < iteracjopsilon):
                 return x1
-        if (tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, to zmniejszamy go do rozmiaru prawej części
+        if (
+                tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, to zmniejszamy go do rozmiaru prawej części
             start = x1
         else:
             end = x1  # przedział zmniejszamy do lewej części
 
         if (stoperan == 2):  # jeżeli stoperan jest na 2 to sprawdza ilość iteracji
-            iterations = 1  # pierwsza iteracja to jeszcze niezmniejszony przedział chyba
-            iterations = iterations
+            iterations = iterations + 1
             if (iteracjopsilon == iterations):
                 return x1
 
