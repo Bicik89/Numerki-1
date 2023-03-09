@@ -1,5 +1,7 @@
 import math as m
 import sys as s
+import matplotlib.pyplot as plot
+import numpy as num
 
 
 # also important jest zakaz float ale
@@ -23,27 +25,25 @@ def horner(wielomian, x):
 # można inne zrobić if u care
 def getValue(i, x):
     wn = [0.1, -2.0, 1.0, 13.0]  # na sztywno wpisane, by użyć w hornerze
-    if i == 1:  # 1.5x^3 - 2.5x^2 + 3.3x + 4.1
+    if i == 1:  # 0.1x^3 -2x^2 + x + 13
         return horner(wn, x)
-    elif i == 2:  # 2sin(x) + 3
+    elif i == 2:  # 3sin(x)
         return 3 * m.sin(x)
-    elif i == 3:  # 1.4^x + 0.5
+    elif i == 3:  # 3^x - 2
         return (3) ** x - 2
-    elif i == 4:  # złożenie nr 1: x * cos(1.5^x+1)
+    elif i == 4:  # złożenie nr 1: sin(0.1x^3 -2x^2 + x + 13)
         return m.sin(horner(wn, x))
-    elif i == 5:  # złożenie nr 2: 8^(x-1) * sin(cos(tan(x)))
+    elif i == 5:  # złożenie nr 2: 2^(0.1x^3 -2x^2 + x + 13) - 13
         return 2 ** (horner(wn, x)) - 13
-    elif i == 6:
+    elif i == 6:  # 1.3^(13 * cos(x)) - 1
         return 1.3 ** (13 * m.cos(x)) - 1
         # else:  # zrobiłem tak że gdy użytkownik zjebie to bierze wielomian spod 1
         # return horner(wn, x);
 
 
-# Jak będzie sprawdzany znak?
-# start = -100
-# end = 100
-# if (getValue(1, start) * getValue(1, end) < 0):
-#    print("Na krańcach przedziału jest inny znak, czyli dalej w tym przedziale szukamy")
+# krotka z human-readable nazwami funkcji
+functions = ('0.1x\u00b3 - 2x\u00b2 + x + 13', '3sin(x)', '3\u02e3 - 2', 'sin(0.1x\u00b3 - 2x\u00b2 + x + 13',
+             '2^(0.1x\u00b3 - 2x\u00b2 + x + 13) - 13', '1.3^(13cos(x) - 1')
 
 
 # Metoda bisekcji
@@ -60,13 +60,14 @@ def bisection(i, start, end, stoperan, iteracjopsilon):
         s.exit()
     iterations = 0
     while True:
+        iterations = iterations + 1
         m = float((start + end) / 2)  # wyznaczam środek przedziału
         tempValue = float(getValue(i, m))  # wpisuje do zmiennej by wielokrotnie tego nie wyliczac
         if (tempValue == 0):  # przypadek gdy 'm' to miejsce zerowe
-            return m
+            return m, iterations
         if (stoperan == 1):  # jeżeli stoperan jest na 1 to sprawdza dokładność
             if (abs(tempValue) < iteracjopsilon):  # abs, bo moduł funkcji w wymaganiach
-                return m
+                return m, iterations
         if (
                 tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, to zmniejszamy go do rozmiaru prawej części
             start = m
@@ -74,9 +75,8 @@ def bisection(i, start, end, stoperan, iteracjopsilon):
             end = m  # przedział zmniejszamy do lewej części
 
         if (stoperan == 2):  # jeżeli stoperan jest na 2 to sprawdza liczbę iteracji
-            iterations = iterations + 1
             if (iteracjopsilon == iterations):
-                return m
+                return m, iterations
 
 
 # Koniec bisekcji
@@ -92,14 +92,15 @@ def falsi(i, start, end, stoperan, iteracjopsilon):
         s.exit()
     iterations = 0  # pierwsza iteracja to jeszcze niezmniejszony przedział chyba
     while True:
+        iterations = iterations + 1
         x1 = float(
             (startValue * end - endValue * start) / (startValue - endValue))  # wyznaczam punkt przecięcia cięciwy z OX
         tempValue = float(getValue(i, x1))  # wpisuje do zmiennej by wielokrotnie tego nie wyliczac
         if (tempValue == 0):  # przypadek gdy 'x1' to miejsce zerowe
-            return x1
+            return x1, iterations
         if (stoperan == 1):  # jeżeli stoperan jest na 1 to sprawdza dokładność
             if (abs(tempValue) < iteracjopsilon):
-                return x1
+                return x1, iterations
         if (
                 tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, to zmniejszamy go do rozmiaru prawej części
             start = x1
@@ -107,9 +108,8 @@ def falsi(i, start, end, stoperan, iteracjopsilon):
             end = x1  # przedział zmniejszamy do lewej części
 
         if (stoperan == 2):  # jeżeli stoperan jest na 2 to sprawdza ilość iteracji
-            iterations = iterations + 1
             if (iteracjopsilon == iterations):
-                return x1
+                return x1, iterations
 
 
 # Koniec Reguly Falsi
@@ -130,6 +130,22 @@ def menufunctions():
     print("4.Composition of polynomial and trigonometric functions")
     print("5.Composition of polynomial and exponential functions")
     print("6.Composition of trigonometric and exponential functions")
+
+
+# Rysowanie wykresu funkcji
+def plots(i, start, end, x0):
+    density = float(0.1)
+    offset = (end - start) * 0.2  # pewne przesunięcie, żeby narysować trochę więcej wykresu funkcji
+    oX_values = num.arange(start - offset, end + offset, density)  # gotowa lista argumentów
+    oY_values = [getValue(i, x) for x in oX_values]  # generowanie listy na podstawie innej listy
+    plot.plot(oX_values, oY_values)  # rysowanie wykresu
+    plot.scatter(x0, getValue(i, x0), color='red')
+    plot.axhline(0, color='black')
+    plot.axvline(0, color='black')
+    plot.xlabel("X")
+    plot.ylabel("Y")
+    plot.title(functions[i - 1])
+    plot.show()
 
 
 if __name__ == '__main__':
@@ -172,5 +188,11 @@ if __name__ == '__main__':
         print("Enter number of iterations")
         iteracjopsilon = int(input())
 
-    print("Zero found using bisection method: " + str(bisection(i, start, end, stoperan, iteracjopsilon)))
-    print("Zero found using regula falsi method: " + str(falsi(i, start, end, stoperan, iteracjopsilon)))
+    x0, iterations = bisection(i, start, end, stoperan, iteracjopsilon)
+    print("Zero found using bisection method: " + str(x0))
+    print("Iterations: " + str(iterations))
+    plots(i, start, end, x0)
+    x0, iterations = falsi(i, start, end, stoperan, iteracjopsilon)
+    print("Zero found using regula falsi method: " + str(x0))
+    print("Iterations: " + str(iterations))
+    # plots(i, start, end, x0)
