@@ -5,8 +5,8 @@ import sys as s
 # also important jest zakaz float ale
 # Python's built-in float type has double precision (it's a C double in CPython, a Java double in Jython)
 
-# Metoda Hornera: 'x' to najwyższa potęga,
-# 'wielomian' to tablica ze współczynnikami w kolejności od najwyższej potęgi do zerowej (uważać na współczynnik 0)
+# Metoda Hornera: 'x' argument funkcji
+# 'wielomian' to lista ze współczynnikami w kolejności od najwyższej potęgi do zerowej (uważać na współczynnik 0)
 
 def horner(wielomian, x):
     wartosc = wielomian[0]
@@ -18,15 +18,6 @@ def horner(wielomian, x):
 
     return wartosc
 
-
-# Test Metody Hornera
-# wielomian = [1, -2, 3, 4]
-# x = 3
-# print("Wielomian wynosi: ", horner(wielomian,x))
-
-
-# Funkcja potęgująca: miałem robić ale zobaczyłem to: 2^4
-# print(2**4)
 
 # Wybór funkcji: 'i' oznacza wybraną funkcję, 'x' wartość argumentu
 # można inne zrobić if u care
@@ -74,17 +65,16 @@ def bisection(i, start, end, stoperan, iteracjopsilon):
         if (tempValue == 0):  # przypadek gdy 'm' to miejsce zerowe
             return m
         if (stoperan == 1):  # jeżeli stoperan jest na 1 to sprawdza dokładność
-            if (abs(tempValue) < iteracjopsilon):
+            if (abs(tempValue) < iteracjopsilon):  # abs, bo moduł funkcji w wymaganiach
                 return m
-        if (
-                tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, to zmniejszamy go do rozmiaru prawej części
+        if (tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, to zmniejszamy go do rozmiaru prawej części
             start = m
         else:
             end = m  # przedział zmniejszamy do lewej części
 
-        if (stoperan == 2):  # jeżeli stoperan jest na 2 to sprawdza ilość iteracji
-            iterations = 1  # pierwsza iteracja to jeszcze niezmniejszony przedział chyba
-            iterations = iterations + 1
+        if (stoperan == 2):  # jeżeli stoperan jest na 2 to sprawdza liczbę iteracji
+            iterations = 1
+            iterations = iterations
             if (iteracjopsilon == iterations):
                 return m
 
@@ -98,28 +88,28 @@ def falsi(i, start, end, stoperan, iteracjopsilon):
     startValue = float(getValue(i, start))  # wpisuje do zmiennej by wielokrotnie(całe dwa razy) tego nie wyliczac
     endValue = float(getValue(i, end))  # wpisuje do zmiennej by wielokrotnie(całe dwa razy) tego nie wyliczac
     if (startValue * endValue > 0):
-        print("Choosen section is incorrect.")
+        print("Chosen section is incorrect.")
         s.exit()
 
     while True:
-        c = float((startValue * end - endValue * start) / (startValue - endValue))  # wyznaczam punkt przecięcia z OX
-        tempValue = float(getValue(i, c))  # wpisuje do zmiennej by wielokrotnie tego nie wyliczac
-        if (tempValue == 0):  # przypadek gdy 'c' to miejsce zerowe
-            return c
+        x1 = float((startValue * end - endValue * start) / (startValue - endValue))  # wyznaczam punkt przecięcia cięciwy z OX
+        tempValue = float(getValue(i, x1))  # wpisuje do zmiennej by wielokrotnie tego nie wyliczac
+        if (tempValue == 0):  # przypadek gdy 'x1' to miejsce zerowe
+            return x1
         if (stoperan == 1):  # jeżeli stoperan jest na 1 to sprawdza dokładność
             if (abs(tempValue) < iteracjopsilon):
-                return c
-        if (
-                tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, to zmniejszamy go do rozmiaru prawej części
-            start = c
+                return x1
+        if (tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, to zmniejszamy go do rozmiaru prawej części
+            start = x1
         else:
-            end = c  # przedział zmniejszamy do lewej części
+            end = x1  # przedział zmniejszamy do lewej części
 
         if (stoperan == 2):  # jeżeli stoperan jest na 2 to sprawdza ilość iteracji
             iterations = 1  # pierwsza iteracja to jeszcze niezmniejszony przedział chyba
-            iterations = iterations + 1
+            iterations = iterations
             if (iteracjopsilon == iterations):
-                return m
+                return x1
+
 
 # Koniec Reguly Falsi
 
@@ -140,8 +130,9 @@ def menufunctions():
     print("5.Composition of polynomial and exponential functions")
     print("6.Composition of trigonometric and exponential functions")
 
+
 if __name__ == '__main__':
-    i = -1   # deklaracja zmiennych do wyboru w programie
+    i = -1  # deklaracja zmiennych do wyboru w programie
     start = 0
     end = 1
     stoperan = -1
@@ -151,38 +142,34 @@ if __name__ == '__main__':
     print("Comparison of bisection and regula falsi methods")
     menufunctions()
     print("If you want to end this program choose 0.")
-    while(i < 0 or i > 6):
+    while (i < 0 or i > 6):
         i = int(input())
-    if(i == 0):
+    if (i == 0):
         s.exit()
 
     print("Choose start of the section:")
     start = float(input())
     print("Choose end of the section:")
     end = float(input())
-    if( start > end ):
+    if (start > end):
         tmp = start
         start = end
         end = tmp
 
-    while(stoperan < 1 or stoperan > 2 ):
-        print("Choose when functions should stop:")
+    while (stoperan < 1 or stoperan > 2):
+        print("Choose when methods should stop:")
         print("1.Specified accuracy achieved")
         print("2.Number of iterations reached")
         stoperan = int(input())
-        if(stoperan < 1 or stoperan > 2):
+        if (stoperan < 1 or stoperan > 2):
             print("Wrong data. Try again")
 
-    if(stoperan == 1):
+    if (stoperan == 1):
         print("Enter accuraccy:")
         iteracjopsilon = float(input())
     else:
         print("Enter number of iterations")
         iteracjopsilon = int(input())
 
-    print("Zero found using bisection method: " + str(bisection(i,start,end,stoperan,iteracjopsilon)))
-    print("Zero found using regula falsi method: " + str(falsi(i,start,end,stoperan,iteracjopsilon)))
-
-
-
-
+    print("Zero found using bisection method: " + str(bisection(i, start, end, stoperan, iteracjopsilon)))
+    print("Zero found using regula falsi method: " + str(falsi(i, start, end, stoperan, iteracjopsilon)))
