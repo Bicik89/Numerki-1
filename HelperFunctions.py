@@ -15,7 +15,6 @@ def horner(wielomian, x):
 
 
 # Wybór funkcji: 'i' oznacza wybraną funkcję, 'x' wartość argumentu
-# można inne zrobić if u care
 def getValue(i, x):
     wn = [0.1, -2.0, 1.0, 13.0]  # na sztywno wpisane, by użyć w hornerze
     if i == 1:  # 0.1x^3 -2x^2 + x + 13
@@ -30,5 +29,4 @@ def getValue(i, x):
         return 2 ** (horner(wn, x)) - 13
     elif i == 6:  # 1.3^(13 * cos(x)) - 1
         return 1.3 ** (13 * m.cos(x)) - 1
-        # else:  # zrobiłem tak że gdy użytkownik zjebie to bierze wielomian spod 1
-        # return horner(wn, x);
+

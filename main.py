@@ -35,7 +35,7 @@ def bisection(i, start, end, stoperan, iteracjopsilon):
             if (abs(tempValue) < iteracjopsilon):  # abs, bo moduł funkcji w wymaganiach
                 return m, iterations
         if (
-                tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, to zmniejszamy go do rozmiaru prawej części
+                tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, zmniejszamy go do rozmiaru prawej części
             start = m
         else:
             end = m  # przedział zmniejszamy do lewej części
@@ -56,7 +56,7 @@ def falsi(i, start, end, stoperan, iteracjopsilon):
     if (startValue * endValue > 0):
         print("Chosen section is incorrect.")
         s.exit()
-    iterations = 0  # pierwsza iteracja to jeszcze niezmniejszony przedział chyba
+    iterations = 0  # pierwsza iteracja to jeszcze niezmniejszony przedział
     while True:
         iterations = iterations + 1
         x1 = float(
@@ -73,21 +73,13 @@ def falsi(i, start, end, stoperan, iteracjopsilon):
         else:
             end = x1  # przedział zmniejszamy do lewej części
 
-        if (stoperan == 2):  # jeżeli stoperan jest na 2 to sprawdza ilość iteracji
+        if (stoperan == 2):  # jeżeli stoperan jest na 2 to sprawdza liczbę iteracji
             if (iteracjopsilon == iterations):
                 return x1, iterations
 
 
 # Koniec Reguly Falsi
 
-# Interfejs
-# Wybierz funkcję - 5 do wyboru [i]
-# Wybierz przedział [start i end]
-# Wybierz stoperan [stoperan]
-# Wybierz epsilon/liczbę iteracji [iteracjopsilon]
-# then
-# bisection(i,start,end,stoperan,iteracjopsilon)
-# falsi(i,start,end,stoperan,iteracjopsilon)
 def menufunctions():
     print("Choose which function's zero you want to find:")
     print("1.Polynomial: " + functions[0])
