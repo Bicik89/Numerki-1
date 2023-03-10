@@ -29,8 +29,6 @@ def bisection(i, start, end, stoperan, iteracjopsilon):
         iterations = iterations + 1
         m = float((start + end) / 2)  # wyznaczam środek przedziału
         tempValue = float(getValue(i, m))  # wpisuje do zmiennej by wielokrotnie tego nie wyliczac
-        if (tempValue == 0):  # przypadek gdy 'm' to miejsce zerowe
-            return m, iterations
         if (stoperan == 1):  # jeżeli stoperan jest na 1 to sprawdza dokładność
             if (abs(tempValue) < iteracjopsilon):  # abs, bo moduł funkcji w wymaganiach
                 return m, iterations
@@ -62,8 +60,6 @@ def falsi(i, start, end, stoperan, iteracjopsilon):
         x1 = float(
             (startValue * end - endValue * start) / (startValue - endValue))  # wyznaczam punkt przecięcia cięciwy z OX
         tempValue = float(getValue(i, x1))  # wpisuje do zmiennej by wielokrotnie tego nie wyliczac
-        if (tempValue == 0):  # przypadek gdy 'x1' to miejsce zerowe
-            return x1, iterations
         if (stoperan == 1):  # jeżeli stoperan jest na 1 to sprawdza dokładność
             if (abs(tempValue) < iteracjopsilon):
                 return x1, iterations
