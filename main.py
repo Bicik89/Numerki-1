@@ -31,7 +31,7 @@ def bisection(i, start, end, stoperan, iteracjopsilon):
         tempValue = float(getValue(i, m))  # wpisuje do zmiennej by wielokrotnie tego nie wyliczac
         if (stoperan == 1):  # jeżeli stoperan jest na 1 to sprawdza dokładność
             if (abs(tempValue) < iteracjopsilon):  # abs, bo moduł funkcji w wymaganiach
-                return m, iterations
+                return m, iterations, start, end
         if (
                 tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, zmniejszamy go do rozmiaru prawej części
             start = m
@@ -40,7 +40,7 @@ def bisection(i, start, end, stoperan, iteracjopsilon):
 
         if (stoperan == 2):  # jeżeli stoperan jest na 2 to sprawdza liczbę iteracji
             if (iteracjopsilon == iterations):
-                return m, iterations
+                return m, iterations, start, end
 
 
 # Koniec bisekcji
@@ -62,7 +62,7 @@ def falsi(i, start, end, stoperan, iteracjopsilon):
         tempValue = float(getValue(i, x1))  # wpisuje do zmiennej by wielokrotnie tego nie wyliczac
         if (stoperan == 1):  # jeżeli stoperan jest na 1 to sprawdza dokładność
             if (abs(tempValue) < iteracjopsilon):
-                return x1, iterations
+                return x1, iterations, start, end
         if (
                 tempValue * startValue > 0):  # w lewej części przedziału nie ma miejsca zerowego, to zmniejszamy go do rozmiaru prawej części
             start = x1
@@ -71,7 +71,7 @@ def falsi(i, start, end, stoperan, iteracjopsilon):
 
         if (stoperan == 2):  # jeżeli stoperan jest na 2 to sprawdza liczbę iteracji
             if (iteracjopsilon == iterations):
-                return x1, iterations
+                return x1, iterations, start, end
 
 
 # Koniec Reguly Falsi
@@ -87,13 +87,14 @@ def menufunctions():
 
 
 # Rysowanie wykresu funkcji
-def plots(i, start, end, x0):
-    density = float(0.1)
+def plots(i, start, end, x0b, x0f):
+    density = float(0.00001)
     offset = (end - start) * 0.2  # pewne przesunięcie, żeby narysować trochę więcej wykresu funkcji
     oX_values = num.arange(start - offset, end + offset, density)  # gotowa lista argumentów
     oY_values = [getValue(i, x) for x in oX_values]  # generowanie listy na podstawie innej listy
     plot.plot(oX_values, oY_values)  # rysowanie wykresu
-    plot.scatter(x0, getValue(i, x0), color='red')
+    plot.scatter(x0b, getValue(i, x0b), color='red') # x0b - miejsce zerowe wyznaczone za pomocą bisekcji
+    plot.scatter(x0f, getValue(i, x0f), color='green') # x0f - miejsce zerowe wyznaczone za pomocą reguly falsi
     plot.axhline(0, color='black')
     plot.axvline(0, color='black')
     plot.xlabel("X")
@@ -142,11 +143,10 @@ if __name__ == '__main__':
         print("Enter number of iterations")
         iteracjopsilon = int(input())
 
-    x0, iterations = bisection(i, start, end, stoperan, iteracjopsilon)
-    print("Zero found using bisection method: " + str(x0))
+    x0b, iterations, final_start, final_end = bisection(i, start, end, stoperan, iteracjopsilon)
+    print("Zero found using bisection method: " + str(x0b))
     print("Iterations: " + str(iterations))
-    plots(i, start, end, x0)
-    x0, iterations = falsi(i, start, end, stoperan, iteracjopsilon)
-    print("Zero found using regula falsi method: " + str(x0))
+    x0f, iterations, final_start, final_end = falsi(i, start, end, stoperan, iteracjopsilon)
+    print("Zero found using regula falsi method: " + str(x0f))
     print("Iterations: " + str(iterations))
-    # plots(i, start, end, x0)
+    plots(i, final_start, final_end, x0b, x0f)
