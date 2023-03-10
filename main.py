@@ -90,13 +90,13 @@ def menufunctions():
 def plots(i, start, end, x0b, x0f):
     density = float(0.00001)
     offset = (end - start) * 0.2  # pewne przesunięcie, żeby narysować trochę więcej wykresu funkcji
-    oX_values = num.arange(start - offset, end + offset, density)  # gotowa lista argumentów
+    oX_values = num.linspace(start - offset, end + offset, 100)  # gotowa lista argumentów
     oY_values = [getValue(i, x) for x in oX_values]  # generowanie listy na podstawie innej listy
-    plot.plot(oX_values, oY_values)  # rysowanie wykresu
+    plot.plot(oX_values, oY_values, scalex=True)  # rysowanie wykresu
     plot.scatter(x0b, getValue(i, x0b), color='red') # x0b - miejsce zerowe wyznaczone za pomocą bisekcji
     plot.scatter(x0f, getValue(i, x0f), color='green') # x0f - miejsce zerowe wyznaczone za pomocą reguly falsi
     plot.axhline(0, color='black')
-    plot.axvline(0, color='black')
+    # plot.axvline(0, color='black')
     plot.xlabel("X")
     plot.ylabel("Y")
     plot.title(functions[i - 1])
